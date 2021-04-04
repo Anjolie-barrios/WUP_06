@@ -25,8 +25,8 @@ $H_0$ Belief in the Big Bang Theory has no association with race.
   
 $H_A$ Belief in the Big Bang Theory is not independent of race; in general, one or more races differ from another in this aspect.  
 
-# Methods
-]]do last? BIGBANG vs RACE, RACE vs DEGREE, BIGBANG vs DEGREE
+# Methods  
+RACE vs BIGBANG, RACE vs EVOLVED, and BIGBANG vs DEGREE are the most important comparisons to be made in the data for this write-up. RACE is the case's race, categorized as black, white, or "other; DEGREE is the case's highest educational degree obtained (from light high school to college graduate); BIGBANG is whether they believe in the Big Bang Theory or not; EVOLVED is whether they believe in the theory of evolution.  
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method. Discuss what data manipulations may be needed for example subsetting or other binning procedures and what sort of graphical displays and inferential tools will be used!-->
 
 # Results
@@ -96,13 +96,13 @@ table3 <- xtabs(~DEGREE + BIGBANG, data=GSScsv)
 rowPerc(table3)
 colPerc(table3)
 ```  
-]]
+Higher education levels are slightly correlated with believing in the Big Bang. 
 ```{r}
 table4 <- xtabs(~RACE + EVOLVED, data=GSScsv)
 rowPerc(table4)
 colPerc(table4)
 ```
-Blacks are exactly even, but 2/3 of the "other" races don't believe in the theory of evolution. White is also even.  
+Blacks are exactly even, but 2/3 of the "other" races don't believe in the theory of evolution. White is mostly even.  
 ```{r}
 table5 <- xtabs(~RACE + POSTLIFE, data=GSScsv)
 rowPerc(table5)
@@ -113,9 +113,18 @@ colPerc(table5)
 
 ## Inferential Results
 ```{r}
-chisq.test(table4)
+#race vs EVOLVED
 chisqtestGC(table4)
+#race vs BIGBANG
+chisqtestGC(table1)
+#degree vs BIGBANG
+chisqtestGC(table3)
 ```
+  
+The null hypothesis is that BIGBANG, EVOLVED, race, and DEGREE have no association iwth each other. BIGBANG, when compared to race and highest scholastic degree, has a higher Chi-Square Statistic (and thus differs more than expected from the null hypotheses) than RACE vs EVOLVED does. However, only RACE vs BIGBANG has a p-value (of 0.011) low enough confirm the alternate hypothesis.  
+  
+### Fischer Tests  
+defining the Fischer function:  
 ```{r}
 fisherXY = function(x, y, confL = 0, printAll=FALSE){
   # Inputs: 
@@ -182,8 +191,21 @@ fisherXY = function(x, y, confL = 0, printAll=FALSE){
 }
 
 ```
+
 ```{r}
-fisherXY(GSScsv$RACE,GSScsv$EVOLVED,confL=.9,printAll = T)
+fisherXY(GSScsv$RACE,GSScsv$BIGBANG,confL=.95,printAll = T)
+```
+  
+A p-value of 0.8029 means that, assuming WHITE and OTHER have no difference in BIGBANG (the null hypothesis), there's an 80.29% chance that the data will be exactly as it is. Comparisons between blacks and whites/others have p-values much lower than 0.5 and thus confirm the alternate hypothesis: that race is associated with belief in the Big Bang theory.  
+White and Other have the smallest differences in beliefs; 1.2482 is the odds ratiot there.  
+```{r}
+fisherXY(GSScsv$RACE,GSScsv$EVOLVED,confL=.95,printAll = T)
+```
+  
+With p-values of 1, 0.3586, and 0.3171, comparisons between EVOLVED and race are bound to support a null hypothesis: that race and EVOLVED have little to no true correlation.   
+Black vs Other and White vs Other have odds ratios that are close to each other (slightly more than 0.5), which makes sense given that the graphs show that those of Other races have more of a tendency to disbelieve in evolution.  
+```{r}
+fisherXY(GSScsv$DEGREE,GSScsv$BIGBANG,confL=.95,printAll = T)
 ```
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
