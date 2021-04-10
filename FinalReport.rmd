@@ -9,6 +9,7 @@ output: html_document
 require(tidyverse)
 require(tigerstats)
 require(knitr)
+library(orsk)
 GSScsv <- read_csv("GSScsv.csv", col_types = cols(VOTE16 = col_factor(levels = c("Voted", "Did not vote")), RACE = col_factor(levels = c("BLACK", "WHITE", "OTHER"))))
 GSScsv <- GSScsv 
   EVOLVED <- as.factor(GSScsv$EVOLVED)
@@ -121,10 +122,10 @@ chisqtestGC(table1)
 chisqtestGC(table3)
 ```
   
-The null hypothesis is that BIGBANG, EVOLVED, race, and DEGREE have no association iwth each other. BIGBANG, when compared to race and highest scholastic degree, has a higher Chi-Square Statistic (and thus differs more than expected from the null hypotheses) than RACE vs EVOLVED does. However, only RACE vs BIGBANG has a p-value (of 0.011) low enough confirm the alternate hypothesis.  
+The null hypothesis is that BIGBANG, EVOLVED, race, and DEGREE have no association with each other. BIGBANG, when compared to race and highest scholastic degree, has a higher Chi-Square Statistic (and thus differs more than expected from the null hypotheses) than RACE vs EVOLVED does. However, only RACE vs BIGBANG has a p-value (of 0.011) low enough confirm the alternate hypothesis.  
   
 ### Fischer Tests  
-defining the Fischer function:  
+This defines the FischerXY function.    
 ```{r}
 fisherXY = function(x, y, confL = 0, printAll=FALSE){
   # Inputs: 
@@ -192,24 +193,36 @@ fisherXY = function(x, y, confL = 0, printAll=FALSE){
 
 ```
 
+#### Race vs BIGBANG
 ```{r}
 fisherXY(GSScsv$RACE,GSScsv$BIGBANG,confL=.95,printAll = T)
 ```
   
 A p-value of 0.8029 means that, assuming WHITE and OTHER have no difference in BIGBANG (the null hypothesis), there's an 80.29% chance that the data will be exactly as it is. Comparisons between blacks and whites/others have p-values much lower than 0.5 and thus confirm the alternate hypothesis: that race is associated with belief in the Big Bang theory.  
-White and Other have the smallest differences in beliefs; 1.2482 is the odds ratiot there.  
+White and Other have the smallest differences in beliefs; 1.2482 is the odds ratio there.  
+When comparing blacks and whites (with White as the control group), the risk ratio is ~162%, meaning Blacks are 1.62 times as likely to disbelieve in the Big Bang Theory than whites.  
+Comparing whites vs Other (White as control group), the RR is ~88.9%, meaning people who are neither black or white are only 0.88 times as likely to disbelieve than whites.  
+Finally, comparing blacks vs Other, the RR is ~55.03%; those in the "Other" category are more likely to believe in the theory than blacks. 
+
+#### Race vs EVOLVED
 ```{r}
 fisherXY(GSScsv$RACE,GSScsv$EVOLVED,confL=.95,printAll = T)
 ```
   
-With p-values of 1, 0.3586, and 0.3171, comparisons between EVOLVED and race are bound to support a null hypothesis: that race and EVOLVED have little to no true correlation.   
-Black vs Other and White vs Other have odds ratios that are close to each other (slightly more than 0.5), which makes sense given that the graphs show that those of Other races have more of a tendency to disbelieve in evolution.  
+With p-values of 1, blacks and whites don't significantly differ in their beliefs in evolution.  
+Black vs Other and White vs Other have odds ratios that are close to each other and much less than 1 (at around 0.5), which makes sense given that the graphs show that those of Other races have more of a tendency to disbelieve in evolution.  
+
+#### Degree vs BIGBANG
 ```{r}
 fisherXY(GSScsv$DEGREE,GSScsv$BIGBANG,confL=.95,printAll = T)
 ```
+  
+The Bachelor vs Graduate comparison has odds ratios close to 1, meaning that their beliefs in the Big Bang are similar, leaning towards TRUE. Comparisons between LT High School, High School, and Junior College also have odds ratios close to 1, leaning towards FALSE. Bachelor & Graduate will have odds ratios of less than 0.6 when compared to any of the other three.  
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
 
 # Discussion and Conclusion
+Race and belief in the Big Bang are associated, confirming the alternate hypothesis; blacks are far more likely to disbelieve in it (whites and Others only have small differences).  
+This is not caused, necessarily, by increased religiosity nor education levels; education levels aren't associated closely with race, and the races have very different reactions to evolution and the Big Bang Theory (both religiously charged topics). Thus, there isn't enough information to properly explain why the alternate hypothesis was true.  
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
