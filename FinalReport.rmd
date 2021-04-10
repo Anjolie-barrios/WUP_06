@@ -122,7 +122,7 @@ chisqtestGC(table1)
 chisqtestGC(table3)
 ```
   
-The null hypothesis is that BIGBANG, EVOLVED, race, and DEGREE have no association with each other. BIGBANG, when compared to race and highest scholastic degree, has a higher Chi-Square Statistic (and thus differs more than expected from the null hypotheses) than RACE vs EVOLVED does. However, only RACE vs BIGBANG has a p-value (of 0.011) low enough confirm the alternate hypothesis.  
+The null hypothesis is that BIGBANG, EVOLVED, race, and DEGREE have no association with each other. BIGBANG, when compared to race and highest scholastic degree, has a higher Chi-Square Statistic (and thus differs more than expected from the null hypotheses) than RACE vs EVOLVED does. In addition, only RACE vs BIGBANG has a p-value (of 0.011) low enough confirm the alternate hypothesis.  
   
 ### Fischer Tests  
 This defines the FischerXY function.    
